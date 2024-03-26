@@ -9,7 +9,6 @@ TOKEN = os.getenv("api_token")
 
 def connect_to_sandbox():
     with Client(TOKEN, target=INVEST_GRPC_API_SANDBOX) as client:
-
         print(client.users.get_accounts())
 
 
