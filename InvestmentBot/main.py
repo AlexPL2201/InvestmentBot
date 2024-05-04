@@ -1,16 +1,24 @@
 import os
 from dotenv import load_dotenv
-from tinkoff.invest import Client
-from tinkoff.invest.constants import INVEST_GRPC_API_SANDBOX
+
+from robot import Robot
+from account import AccountManager, Account
+from strategy import SMAStrategy, Analyzer
+
 
 load_dotenv()
 TOKEN = os.getenv("api_token")
+# ACC_ID = os.getenv('acc_id')
+TICKERS = ("SBER",)
 
 
-def connect_to_sandbox():
-    with Client(TOKEN, target=INVEST_GRPC_API_SANDBOX) as client:
-        print(client.users.get_accounts())
+def main():
+    accounts_mgr = AccountManager(token=TOKEN)
+    account = Account(token=TOKEN, account=accounts_mgr.select_account())
+    strategy = Analyzer(SMAStrategy())
+    robot = Robot(token=TOKEN, account=account, ticker="SBER", strategy=strategy)
+    robot.run_robot()
 
 
 if __name__ == '__main__':
-    connect_to_sandbox()
+    main()
